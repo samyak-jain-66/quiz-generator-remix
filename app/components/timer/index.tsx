@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 const Timer = ({
   widgetData,
@@ -20,19 +20,19 @@ const Timer = ({
       return () => clearInterval(timer); // Cleanup on unmount
     } else {
       if (handleNextQuestion) {
-        setTime(timer)
+        setTime(timer);
         handleNextQuestion();
       }
     }
   }, [time]);
 
-useEffect(()=>{
-console.log("inside timer")
-},[timer])
+  useEffect(() => {
+    console.log('inside timer');
+  }, [timer]);
 
   return (
-    <div className="flex justify-end items-center p-4">
-      <div className="text-xl font-bold text-blue-600">
+    <div className='flex justify-end items-center p-4'>
+      <div className='text-xl font-bold text-[#1d1160]'>
         {time > 0 ? `${time}s` : "Time's Up!"}
       </div>
     </div>

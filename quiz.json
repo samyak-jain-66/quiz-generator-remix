@@ -429,5 +429,121 @@
       "type": "timer",
       "id": 0.6377204243583225
     }
+  ],
+  "0.48880761344811074": [
+    {
+      "name": "Progress",
+      "type": "progress",
+      "id": 0.8410501158203401
+    },
+    {
+      "name": "Timer",
+      "type": "timer",
+      "id": 0.41205087430701814
+    },
+    {
+      "name": "Form",
+      "type": "form",
+      "id": 0.37786112657519255,
+      "props": {
+        "title": "sds",
+        "imageUrl": "sd",
+        "selectedOption": "sd",
+        "options": [
+          "sd",
+          "sd",
+          "sd",
+          "ds"
+        ]
+      }
+    }
+  ],
+  "0.38565327869499066": [
+    {
+      "name": "Progress",
+      "type": "progress",
+      "id": 0.05943909491262844
+    },
+    {
+      "name": "Timer",
+      "type": "timer",
+      "id": 0.6764753116443949
+    },
+    {
+      "name": "Form",
+      "type": "form",
+      "id": 0.5054675505891275,
+      "props": {
+        "title": "as",
+        "imageUrl": "sd",
+        "selectedOption": "sd",
+        "options": [
+          "sd",
+          "sd",
+          "sd",
+          "sd"
+        ]
+      }
+    },
+    {
+      "name": "Form",
+      "type": "form",
+      "id": 0.8050510745323145,
+      "props": {
+        "title": "asd",
+        "imageUrl": "sd",
+        "selectedOption": "sdsd",
+        "options": [
+          "sdsd",
+          "sdsd",
+          "sdsd",
+          "sdsd"
+        ]
+      }
+    }
+  ],
+  "0.1351931133386417": [
+    {
+      "name": "Progress",
+      "type": "progress",
+      "id": 0.22463851671889623
+    },
+    {
+      "name": "Timer",
+      "type": "timer",
+      "id": 0.2150518547187752
+    },
+    {
+      "name": "Form",
+      "type": "form",
+      "id": 0.41649453531714187,
+      "props": {
+        "title": "cdf",
+        "imageUrl": "",
+        "selectedOption": "22",
+        "options": [
+          "vfdv",
+          "22",
+          "33",
+          "44"
+        ]
+      }
+    },
+    {
+      "name": "Form",
+      "type": "form",
+      "id": 0.25080837199872463,
+      "props": {
+        "title": "jkh",
+        "imageUrl": "",
+        "selectedOption": "grg",
+        "options": [
+          "ce",
+          "grg",
+          "vrg",
+          "brt"
+        ]
+      }
+    }
   ]
 }

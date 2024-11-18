@@ -1,11 +1,11 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
-import { json, useLoaderData } from "@remix-run/react";
-import { useState, useEffect } from "react";
-import Progress from "~/components/progress";
-import QuizForm from "~/components/quiz-form";
-import Timer from "~/components/timer";
-import { loadQuizData } from "~/utils/utils";
-import { useNavigate } from "@remix-run/react";
+import { LoaderFunctionArgs } from '@remix-run/node';
+import { json, useLoaderData } from '@remix-run/react';
+import { useState, useEffect } from 'react';
+import Progress from '~/components/progress';
+import QuizForm from '~/components/quiz-form';
+import Timer from '~/components/timer';
+import { loadQuizData } from '~/utils/utils';
+import { useNavigate } from '@remix-run/react';
 
 const client = () => {
   const data = useLoaderData<typeof loader>();
@@ -19,9 +19,9 @@ const client = () => {
 
   const handleRendering = (item: any) => {
     switch (item?.type) {
-      case "progress":
+      case 'progress':
         return <Progress widgetData={item} percent={percent} />;
-      case "timer":
+      case 'timer':
         return (
           <Timer
             key={formIndex}
@@ -30,7 +30,7 @@ const client = () => {
             handleNextQuestion={handleNextQuestion}
           />
         );
-      case "form":
+      case 'form':
         return <QuizForm widgetData={item} key={formIndex} />;
       default:
         return <></>;
@@ -61,9 +61,9 @@ const client = () => {
   // Fetch and update form data on load
   useEffect(() => {
     if (data) {
-      const filterFormData = data.filter((item: any) => item.type === "form");
-      const otherFormData = data.filter((item: any) => item.type !== "form");
-      const timer = data.filter((item: any) => item.type === "timer");
+      const filterFormData = data.filter((item: any) => item.type === 'form');
+      const otherFormData = data.filter((item: any) => item.type !== 'form');
+      const timer = data.filter((item: any) => item.type === 'timer');
 
       if (timer.length > 0) {
         setIsTimerPresent(true);
@@ -74,31 +74,28 @@ const client = () => {
   }, []);
 
   // Handle rendering elements without updating state inside render
-// Handle rendering elements without updating state inside render
-useEffect(() => {
-  const newRenderedElements: any = [];
-console.log("data", data)
-  data.forEach((item: any) => {
-    if (item.type === "form") {
-      if (formIndex < formData.length) {
-        if (formData[formIndex]?.id == item.id) {
-          console.log("inside hello",formData[formIndex]?.id,item.id);
-          newRenderedElements.push(handleRendering(item));
+  // Handle rendering elements without updating state inside render
+  useEffect(() => {
+    const newRenderedElements: any = [];
+    data.forEach((item: any) => {
+      if (item.type === 'form') {
+        if (formIndex < formData.length) {
+          if (formData[formIndex]?.id == item.id) {
+            console.log('inside hello', formData[formIndex]?.id, item.id);
+            newRenderedElements.push(handleRendering(item));
+          }
         }
+      } else {
+        newRenderedElements.push(handleRendering(item));
       }
-    } else {
-      newRenderedElements.push(handleRendering(item));
-    }
-  });
+    });
 
-  setRenderElements(newRenderedElements);
-}, [formIndex, formData]);
-
-
+    setRenderElements(newRenderedElements);
+  }, [formIndex, formData]);
 
   return (
-    <div className="flex flex-col gap-2 mx-4 sm:mx-16 md:max-24 lg:mx-80 mt-8">
-      <h2>{"Question " + (formIndex + 1)}</h2>
+    <div className='flex flex-col gap-2 mx-4 sm:mx-16 md:max-24 lg:mx-80 mt-8'>
+      <h2>{'Question ' + (formIndex + 1)}</h2>
 
       {/* Render elements stored in state */}
       {renderedElements}
@@ -107,7 +104,7 @@ console.log("data", data)
       {formIndex !== formData.length && (
         <button
           onClick={handleClickIndex}
-          className="bg-blue-500 text-white px-3 py-2 rounded-md mt-5"
+          className='bg-[#1d1160] text-white px-3 py-1 text-[14px] rounded-md mt-5'
         >
           Next
         </button>
@@ -118,7 +115,7 @@ console.log("data", data)
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
-  const query: any = url.searchParams.get("quizId");
+  const query: any = url.searchParams.get('quizId');
   const quizData = await loadQuizData();
   const widgetData = quizData[query];
   return json(widgetData);
