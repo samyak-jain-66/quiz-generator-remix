@@ -1,4 +1,12 @@
-import type { MetaFunction } from "@remix-run/node";
+import { MetaFunction, redirect, TypedResponse } from "@remix-run/node";
+import { useState } from "react";
+import Preview from "~/components/preview";
+import Sidebar from "~/components/sidebar";
+import { useAppContext } from "~/context";
+import { SidebarConfig } from "~/utils/sidebarData";
+import { json } from "@remix-run/node";
+import { loadQuizData, saveQuizData, WidgetData } from "~/utils/utils";
+import { useNavigate } from "@remix-run/react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -8,49 +16,116 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
+  const navigate = useNavigate();
+  const [widgets, setWidgets] = useState<Array<any>>([]);
+  const { state } = useAppContext();
+  const handleDrag = (e: any, widgetType: any) => {
+    e?.dataTransfer?.setData("widgetType", JSON.stringify(widgetType));
+  };
+
+  const handleOnDrop = (e: any) => {
+    const data = e?.dataTransfer?.getData("widgetType");
+    const widgetType = JSON.parse(data);
+    const selectedWidget = SidebarConfig?.find(
+      (widget) => widget.type === widgetType?.type
+    );
+    setWidgets([...widgets, { ...selectedWidget, id: Math.random() }]);
+  };
+
+  const handleDragOver = (e: any) => {
+    e?.preventDefault();
+  };
+  console.log("widgets", widgets);
+  const handleSubmit = async () => {
+    let widgetsToSubmitted = widgets;
+    let contextFormUpdatedData = [...state?.formData];
+    const formWidgets = widgets?.filter((widget) => widget?.type === "form");
+    if (formWidgets?.length !== state?.formData?.length) {
+      alert("Please save form first");
+    } else {
+      widgets.forEach((widget, index) => {
+        if (widget?.type === "form") {
+          const existingIndex = contextFormUpdatedData.findIndex(
+            (item) => item?._id === widget?._id
+          );
+          widgetsToSubmitted[index] = {
+            ...widgetsToSubmitted[index],
+            ...contextFormUpdatedData[existingIndex],
+          };
+        }
+      });
+      setWidgets(widgetsToSubmitted);
+      console.log(widgetsToSubmitted);
+      const quizId = Math.random();
+      await fetch("/admin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          quizId: quizId,
+          widgets: widgetsToSubmitted,
+        }),
+      });
+      if (quizId) {
+        window.open(`/client?quizId=${quizId}`, "_blank");
+        window.location.reload();
+      }
+    }
+  };
+
+  console.log("form", state?.formData);
+
   return (
-    <div className="flex h-screen items-center justify-center">
-      <div className="flex flex-col items-center gap-16">
-        <header className="flex flex-col items-center gap-9">
-          <h1 className="leading text-2xl font-bold text-gray-800 dark:text-gray-100">
-            Welcome to <span className="sr-only">Remix</span>
-          </h1>
-          <div className="h-[144px] w-[434px]">
-            <img
-              src="/logo-light.png"
-              alt="Remix"
-              className="block w-full dark:hidden"
-            />
-            <img
-              src="/logo-dark.png"
-              alt="Remix"
-              className="hidden w-full dark:block"
-            />
+    <div className="flex h-screen">
+      {/* Fixed Sidebar */}
+      <div className="w-[25%] fixed top-0 left-0 h-screen bg-white shadow-md">
+        <Sidebar handleDrag={handleDrag} />
+      </div>
+
+      {/* Main Content */}
+      <div
+        onDragOver={handleDragOver}
+        onDrop={handleOnDrop}
+        className="bg-[#000000] w-full ml-[25%] h-screen"
+      >
+        <div>
+          <Preview widgets={widgets} />
+        </div>
+
+        {widgets?.length > 0 && (
+          <div className="fixed bottom-0 left-[25%] w-[75%]">
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
           </div>
-        </header>
-        <nav className="flex flex-col items-center justify-center gap-4 rounded-3xl border border-gray-200 p-6 dark:border-gray-700">
-          <p className="leading-6 text-gray-700 dark:text-gray-200">
-            What&apos;s next?
-          </p>
-          <ul>
-            {resources.map(({ href, text, icon }) => (
-              <li key={href}>
-                <a
-                  className="group flex items-center gap-3 self-stretch p-3 leading-normal text-blue-700 hover:underline dark:text-blue-500"
-                  href={href}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {icon}
-                  {text}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        )}
       </div>
     </div>
   );
+}
+
+export async function action({ request }: { request: Request }) {
+  const method = request.method.toUpperCase();
+  const body = await request.json();
+  if (method === "POST") {
+    const { quizId, widgets }: { quizId: string; widgets: WidgetData[] } = body;
+    if (!quizId || !widgets) {
+      return json({ error: "Missing quizId or widgets data" }, { status: 400 });
+    }
+    const quizData = await loadQuizData();
+    quizData[quizId] = widgets; // Save widgets by quizId
+    await saveQuizData(quizData);
+    return redirect(`/client?quizId=${quizId}`);
+    // return new Response(JSON.stringify({ success: true }), {
+    //   status: 200,
+    //   headers: { "Content-Type": "application/json" },
+    // });
+  }
 }
 
 const resources = [
