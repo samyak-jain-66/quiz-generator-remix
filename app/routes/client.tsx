@@ -77,12 +77,12 @@ const client = () => {
 // Handle rendering elements without updating state inside render
 useEffect(() => {
   const newRenderedElements: any = [];
-
+console.log("data", data)
   data.forEach((item: any) => {
     if (item.type === "form") {
       if (formIndex < formData.length) {
-        if (formData[formIndex]?.id === item.id) {
-          console.log("inside hello");
+        if (formData[formIndex]?.id == item.id) {
+          console.log("inside hello",formData[formIndex]?.id,item.id);
           newRenderedElements.push(handleRendering(item));
         }
       }

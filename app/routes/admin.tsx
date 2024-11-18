@@ -46,7 +46,7 @@ export default function Index() {
       widgets.forEach((widget, index) => {
         if (widget?.type === "form") {
           const existingIndex = contextFormUpdatedData.findIndex(
-            (item) => item?._id === widget?._id
+            (item) => item?.id === widget?.id
           );
           widgetsToSubmitted[index] = {
             ...widgetsToSubmitted[index],
@@ -87,14 +87,15 @@ export default function Index() {
       <div
         onDragOver={handleDragOver}
         onDrop={handleOnDrop}
-        className="bg-[#000000] w-full ml-[25%] h-screen"
+        className="bg-[#000000] w-full ml-[25%]"
+        style={{ height: "min-content", minHeight: "100vh" }}
       >
         <div>
           <Preview widgets={widgets} />
         </div>
 
         {widgets?.length > 0 && (
-          <div className="fixed bottom-0 left-[25%] w-[75%]">
+          <div className="w-[full] mt-4">
             <button
               type="submit"
               className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
