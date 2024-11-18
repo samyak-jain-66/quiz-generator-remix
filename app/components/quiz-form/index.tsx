@@ -92,7 +92,7 @@ const QuizForm = ({ widgetData }: { widgetData: any }) => {
             />
           </div>
         ) : (
-          <img src={imageUrl} width={200} height={200} />
+          imageUrl && <img src={imageUrl} width={200} height={200} />
         )}
 
         {/* Options */}

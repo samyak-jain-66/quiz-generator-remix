@@ -7,6 +7,8 @@ import { SidebarConfig } from "~/utils/sidebarData";
 import { json } from "@remix-run/node";
 import { loadQuizData, saveQuizData, WidgetData } from "~/utils/utils";
 import { useNavigate } from "@remix-run/react";
+import { v4 as uuidv4 } from 'uuid';
+
 
 export const meta: MetaFunction = () => {
   return [
@@ -42,10 +44,10 @@ export default function Index() {
       } else if (selectedWidget?.type === "timer" && hasTimerWidget) {
         alert("You can only add one timer");
       } else {
-        setWidgets([...widgets, { ...selectedWidget, id: Math.random() }]);
+        setWidgets([...widgets, { ...selectedWidget, id: uuidv4() }]);
       }
     } else {
-      setWidgets([...widgets, { ...selectedWidget, id: Math.random() }]);
+      setWidgets([...widgets, { ...selectedWidget, id: uuidv4() }]);
     }
   };
 
@@ -73,7 +75,7 @@ export default function Index() {
       });
       setWidgets(widgetsToSubmitted);
       console.log(widgetsToSubmitted);
-      const quizId = Math.random();
+      const quizId = uuidv4()
       await fetch("/admin", {
         method: "POST",
         headers: {
@@ -91,7 +93,7 @@ export default function Index() {
     }
   };
 
-  
+
   return (
     <div className="flex h-screen">
       {/* Dropdown */}
